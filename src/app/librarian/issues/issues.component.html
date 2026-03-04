@@ -1,0 +1,90 @@
+<section class="issues-page">
+
+<h2 class="page-title">Issued Books Management</h2>
+
+<div class="toolbar">
+
+<input
+type="text"
+placeholder="Search by book or user..."
+[(ngModel)]="searchTerm"
+class="search"
+/>
+
+<div class="filters">
+
+<button
+(click)="filter='all'"
+[class.active]="filter==='all'">
+All
+</button>
+
+<button
+(click)="filter='active'"
+[class.active]="filter==='active'">
+Active
+</button>
+
+<button
+(click)="filter='overdue'"
+[class.active]="filter==='overdue'">
+Overdue
+</button>
+
+</div>
+
+</div>
+
+<div class="issues-grid" *ngIf="issues$ | async as issues">
+
+<div
+class="issue-card"
+*ngFor="let issue of filterIssues(issues)">
+
+<div class="book">
+
+<div class="book-title">
+{{issue.book?.title}}
+</div>
+
+<div class="isbn">
+ISBN: {{issue.book?.isbn}}
+</div>
+
+</div>
+
+<div class="user">
+
+<div class="name">
+{{issue.user?.fullName}}
+</div>
+
+<div class="username">
+&#64;{{issue.user?.username}}
+</div>
+
+</div>
+
+<div class="due">
+
+<span class="date">
+Due {{issue.dueDate | date:'mediumDate'}}
+</span>
+
+<span
+class="badge"
+[class.overdue]="isOverdue(issue.dueDate)">
+{{ isOverdue(issue.dueDate) ? 'Overdue' : 'Active' }}
+</span>
+
+</div>
+
+</div>
+
+<div *ngIf="issues.length===0" class="empty">
+No active issues found
+</div>
+
+</div>
+
+</section>

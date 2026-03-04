@@ -1,0 +1,147 @@
+/* --- UPDATED PROFESSIONAL THEME --- */
+:root {
+  --text-dark: #0f172a;    /* High contrast black-blue */
+  --text-muted: #64748b;
+  --bg-page: #73aae0;      /* Your website background */
+  --primary: #2563eb;
+  --border: #cbd5e1;
+  --error: #e11d48;
+  --white: #ffffff;
+}
+
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-page); /* Matches your site background */
+  font-family: 'Inter', system-ui, sans-serif;
+  padding: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--white); /* Changed to white for high-contrast legibility */
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.auth-header h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-dark); /* Extremely legible */
+  margin-bottom: 8px;
+  letter-spacing: -0.025em;
+}
+
+.auth-header p {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.form-field {
+  margin-bottom: 24px;
+}
+
+/* HIGH LEGIBILITY LABELS - BOLD & DARK */
+.form-field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700; 
+  color: var(--text-dark); /* Clear black-blue color */
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.required {
+  color: var(--error);
+  margin-left: 2px;
+}
+
+input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border); /* Thicker border for better visibility */
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--text-dark);
+  background-color: #fcfcfc;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+/* REQUIRED FIELD HIGHLIGHTING */
+.has-error label {
+  color: var(--error);
+}
+
+.has-error input {
+  border-color: var(--error);
+  background-color: #fff1f2;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--error);
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: transform 0.1s active, background-color 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  /* background-color: #0d1fe5; */
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.auth-footer a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}

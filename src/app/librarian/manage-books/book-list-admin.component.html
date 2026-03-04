@@ -1,0 +1,77 @@
+<section class="issues-page">
+  <header class="header-flex">
+    <h2 class="page-title">📚 Library Inventory</h2>
+    <button class="btn-add" (click)="openCreate()">+ Add New Book</button>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-wrapper">
+      <input class="search" placeholder="Search title, author or category..." [formControl]="searchControl">
+    </div>
+    
+    <div class="filters">
+      <select [formControl]="categoryControl" class="filter-select">
+        <option value="all">All Genres</option>
+        <option>Fiction</option>
+        <option>Fantasy</option>
+        <option>Science Fiction</option>
+        <option>Romance</option>
+      </select>
+
+      <select [formControl]="sortControl" class="filter-select">
+        <option value="title-asc">Title A-Z</option>
+        <option value="stock-asc">Stock Low → High</option>
+      </select>
+    </div>
+  </div>
+
+  <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
+
+  <div class="issues-grid" *ngIf="filteredBooks$ | async as books">
+    <div class="issue-card" *ngFor="let b of books">
+      <div class="card-header">
+        <span class="book-title">{{ b.title }}</span>
+        <span class="category-tag">{{ b.category }}</span>
+      </div>
+
+      <div class="due">
+        <span class="date">Available Copies:</span>
+        <span class="badge" 
+              [class.overdue]="b.availableCopies === 0"
+              [class.warning]="b.availableCopies > 0 && b.availableCopies <= 2">
+          {{ b.availableCopies }} / {{ b.totalCopies }}
+        </span>
+      </div>
+
+      <div class="actions">
+        <button class="action-btn edit" (click)="openEdit(b)">Edit Details</button>
+        <button class="action-btn delete" (click)="deleteBook(b)">Remove</button>
+      </div>
+    </div>
+
+    <div class="empty" *ngIf="books.length === 0">
+      <p>No books found matching your criteria.</p>
+    </div>
+  </div>
+
+  <app-book-form
+    *ngIf="isFormOpen"
+    [book]="editingBook"
+    (saved)="onSave($event)"
+    (cancelled)="closeForm()">
+  </app-book-form>
+
+  <div class="confirm-overlay" *ngIf="isDeleteModalOpen">
+    <div class="confirm-modal">
+      <div class="confirm-icon">!</div>
+      <div class="confirm-text">
+        <h3>Delete Book?</h3>
+        <p>Are you sure you want to remove <strong>"{{bookToDelete?.title}}"</strong>? This action is permanent.</p>
+      </div>
+      <div class="confirm-btns">
+        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+        <button class="btn-yes" (click)="confirmDelete()">Delete Now</button>
+      </div>
+    </div>
+  </div>
+</section>

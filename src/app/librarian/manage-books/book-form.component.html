@@ -1,0 +1,49 @@
+<div class="modal-overlay">
+  <div class="modal">
+    <header class="modal-header">
+      <div class="header-content">
+        <span class="pill">Library Admin</span>
+        <h3>{{ book ? 'Update Book' : 'New Entry' }}</h3>
+      </div>
+      <button class="close-btn" (click)="close()">×</button>
+    </header>
+
+    <div class="modal-body">
+      <form [formGroup]="form" id="bookForm" (ngSubmit)="submit()">
+        <div class="animate-field" style="--delay: 1">
+          <label>Title
+            <input formControlName="title" placeholder="Book title..." />
+          </label>
+        </div>
+
+        <div class="animate-field" style="--delay: 2">
+          <label>Description
+            <textarea formControlName="body" rows="3" placeholder="Summary..."></textarea>
+          </label>
+        </div>
+
+        <div class="field-row animate-field" style="--delay: 3">
+          <label>Category
+            <input formControlName="category" placeholder="Genre" />
+          </label>
+          <label>Year
+            <input type="number" formControlName="publishedYear" />
+          </label>
+        </div>
+
+        <div class="animate-field" style="--delay: 4">
+          <label>Total Copies
+            <input type="number" formControlName="totalCopies" />
+          </label>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="cancel" (click)="close()">Cancel</button>
+      <button type="submit" form="bookForm" class="save" [disabled]="form.invalid">
+        <span>{{ book ? 'Update' : 'Save' }}</span>
+      </button>
+    </div>
+  </div>
+</div>

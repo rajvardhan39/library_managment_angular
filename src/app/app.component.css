@@ -1,0 +1,154 @@
+/* GLOBAL RESET */
+body {
+  margin: 0;
+  background: #0f172a;
+  font-family: 'Inter', sans-serif;
+  height: 100vh;
+  overflow: hidden; /* Prevents the whole page from scrolling */
+}
+
+/* TOPBAR */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  height: 64px;
+  background: #020617;
+  border-bottom: 1px solid #1e293b;
+  color: white;
+  position: relative;
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logo {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  border-radius: 4px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.nav-links a.active {
+  color: white;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 15px;
+  border-right: 1px solid #1e293b;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.logout-btn {
+  background: #ef4444;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.logout-btn:hover {
+  opacity: 0.9;
+}
+
+/* LAYOUT STRUCTURE */
+.app-layout {
+  display: flex;
+  height: calc(100vh - 64px); /* Fills remaining height after topbar */
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  background: #020617;
+  border-right: 1px solid #1e293b;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  flex-shrink: 0; /* Ensures sidebar width doesn't collapse */
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px 24px;
+  margin: 4px 12px;
+  color: #94a3b8;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.sidebar a:hover {
+  background: #1e293b;
+  color: white;
+}
+
+.sidebar a.active {
+  background: #6366f1;
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+/* MAIN CONTENT AREA */
+.main-container {
+  flex-grow: 1;
+  overflow-y: auto; /* This area scrolls when content is long */
+  padding: 30px;
+  background: #0f172a;
+}
+
+/* CUSTOM SCROLLBAR (Optional, for better look) */
+.main-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-container::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.main-container::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+.main-container::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}

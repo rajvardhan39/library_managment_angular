@@ -1,0 +1,33 @@
+<section class="dashboard">
+
+<h1>Library Analytics</h1>
+
+<div class="stats" *ngIf="stats$ | async as s">
+
+<div class="card">
+<label>Total Books</label>
+<strong>{{s.books}}</strong>
+</div>
+
+<div class="card">
+<label>Total Users</label>
+<strong>{{s.users}}</strong>
+</div>
+
+<div class="card">
+<label>Active Issues</label>
+<strong>{{s.issues}}</strong>
+</div>
+
+<div class="card danger">
+<label>Overdue</label>
+<strong>{{s.overdue}}</strong>
+</div>
+
+</div>
+
+<div class="chart">
+<canvas id="issueChart"></canvas>
+</div>
+
+</section>

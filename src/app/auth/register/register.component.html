@@ -1,0 +1,86 @@
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Create Account</h1>
+      <p>Join the Library Management Network</p>
+    </div>
+
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate>
+      
+      <div class="form-field" [class.has-error]="fullName.touched && fullName.invalid">
+        <label for="fullName">Full Name <span class="required">*</span></label>
+        <input
+          id="fullName"
+          name="fullName"
+          [(ngModel)]="model.fullName"
+          #fullName="ngModel"
+          required
+          placeholder="e.g. John Doe"
+          autocomplete="name"
+        />
+        <div class="hint" *ngIf="fullName.touched && fullName.invalid">Full name is required</div>
+      </div>
+
+      <div class="form-field" [class.has-error]="username.touched && username.invalid">
+        <label for="username">Username <span class="required">*</span></label>
+        <input
+          id="username"
+          name="username"
+          [(ngModel)]="model.username"
+          #username="ngModel"
+          required
+          minlength="3"
+          placeholder="e.g. librarian_key"
+          autocomplete="username"
+        />
+        <div class="hint" *ngIf="username.touched && username.invalid">Min 3 characters required</div>
+      </div>
+
+      <div class="form-field" [class.has-error]="email.touched && email.invalid">
+        <label for="email">Email Address <span class="required">*</span></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="model.email"
+          #email="ngModel"
+          required
+          email
+          placeholder="name@library.org"
+          autocomplete="email"
+        />
+        <div class="hint" *ngIf="email.touched && email.invalid">Valid email is required</div>
+      </div>
+
+      <div class="form-field" [class.has-error]="password.touched && password.invalid">
+        <label for="password">Security Password <span class="required">*</span></label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="model.password"
+          #password="ngModel"
+          required
+          minlength="6"
+          placeholder="••••••••"
+          autocomplete="new-password"
+        />
+        <div class="hint" *ngIf="password.touched && password.invalid">Min 6 characters required</div>
+      </div>
+
+      <div class="error-alert" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="form.invalid || isLoading">
+        <span *ngIf="!isLoading">Register Identity</span>
+        <span *ngIf="isLoading" class="loader"></span>
+      </button>
+
+      <div class="auth-footer">
+        <span>Already have an account?</span>
+        <a routerLink="/login">Sign In</a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<nav class="topbar">
+  <div class="brand" routerLink="/books">
+    <div class="logo"></div>
+    Library Manager
+  </div>
+
+  <div class="nav-links">
+    <ng-container *ngIf="isNormalUser$ | async">
+      <a routerLink="/books" routerLinkActive="active">Books</a>
+      <a routerLink="/my-books" routerLinkActive="active">My Books</a>
+    </ng-container>
+
+    <ng-container *ngIf="currentUser$ | async as user">
+      <div class="user-info">
+        <div class="avatar">
+          {{ user.fullName.charAt(0) }}
+        </div>
+        <span>{{ user.fullName }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </ng-container>
+  </div>
+</nav>
+
+<div class="app-layout">
+  <aside class="sidebar" *ngIf="isLibrarian$ | async">
+    <a routerLink="/librarian/dashboard" routerLinkActive="active">
+      Dashboard
+    </a>
+    <a routerLink="/librarian/books" routerLinkActive="active">
+      Manage Books
+    </a>
+    <a routerLink="/librarian/users" routerLinkActive="active">
+      Manage Users
+    </a>
+    <a routerLink="/librarian/issues" routerLinkActive="active">
+      Issues
+    </a>
+  </aside>
+
+  <main class="main-container">
+    <router-outlet></router-outlet>
+  </main>
+</div>

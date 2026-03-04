@@ -1,0 +1,43 @@
+<header class="admin-topbar">
+  <div class="logo">Library Manager</div>
+  <nav class="nav-links">
+    <a routerLink="/librarian/dashboard">Dashboard</a>
+    <a routerLink="/librarian">Library Administrator</a>
+    <a routerLink="/librarian/catalog">Catalog</a>
+    <button (click)="logout()">Logout</button>
+  </nav>
+</header>
+
+<section class="admin-page">
+
+  <div class="grid" *ngIf="books$ | async as books">
+
+    <div class="card" *ngFor="let b of books">
+
+      <div class="card-body">
+
+        <h3>{{ b.title }}</h3>
+
+        <p class="description">{{ b.body }}</p>
+
+        <div class="meta-grid">
+          <div><strong>ISBN:</strong> {{ b.isbn || 'N/A' }}</div>
+          <div><strong>Year:</strong> {{ b.publishedYear }}</div>
+          <div><strong>Total:</strong> {{ b.totalCopies }}</div>
+          <div><strong>Available:</strong> {{ b.availableCopies }}</div>
+          <div><strong>Issued:</strong> {{ b.issuedCopies }}</div>
+          <div><strong>Added By:</strong> {{ b.addedBy }}</div>
+        </div>
+
+        <div *ngIf="b.borrowedBy" class="borrow-info">
+          <strong>Borrowed By:</strong> {{ b.borrowedBy }} <br>
+          <strong>Due Date:</strong> {{ b.dueDate | date:'mediumDate' }}
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

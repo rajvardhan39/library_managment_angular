@@ -1,0 +1,174 @@
+/* --- OVERLAY FADE --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: overlayFade 0.4s ease-out forwards;
+}
+
+/* --- MODAL ENTRANCE: SPRING MOTION --- */
+.modal {
+  background: #0f172a;
+  width: 460px;
+  max-height: 85vh;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+  /* Custom cubic-bezier for a high-end "pop" effect */
+  animation: modalSpring 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  overflow: hidden;
+}
+
+/* --- STAGGERED FIELDS --- */
+.animate-field {
+  opacity: 0;
+  transform: translateX(-15px);
+  animation: fieldIn 0.5s ease-out forwards;
+  /* Uses the --delay variable from HTML */
+  animation-delay: calc(var(--delay) * 0.1s + 0.2s);
+}
+
+/* --- INTERACTIVE INPUTS --- */
+input, textarea {
+  width: 100%;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: #fff;
+  margin-top: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: #020617;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+  transform: translateY(-2px); /* Subtle lift on focus */
+}
+
+/* --- THE "SAVE" BUTTON GLOW --- */
+.save {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.save:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+}
+
+.save:active { transform: scale(0.95); }
+
+/* Shimmer effect on the button */
+.save::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: rotate(45deg);
+  transition: 0.8s;
+}
+.save:hover::after { left: 120%; }
+
+/* --- KEYFRAMES --- */
+@keyframes overlayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- THE PREMIUM CLOSE BUTTON --- */
+.close-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+
+.close-icon {
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* HOVER STATE */
+.close-btn:hover {
+  background: rgba(239, 68, 68, 0.1); /* Soft crimson highlight */
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444; /* Brighter red for the X */
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+}
+
+.close-btn:hover .close-icon {
+  transform: rotate(90deg) scale(1.2);
+}
+
+/* ACTIVE STATE (The Click) */
+.close-btn:active {
+  transform: scale(0.9);
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* SUBTLE ENTRANCE ANIMATION */
+.modal-header .close-btn {
+  opacity: 0;
+  animation: closeBtnFadeIn 0.5s ease-out forwards;
+  animation-delay: 0.6s; /* Appears after the modal finishes its pop */
+}
+
+@keyframes closeBtnFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes modalSpring {
+  from { opacity: 0; transform: scale(0.8) translateY(60px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes fieldIn {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- REMAINING COMPACT STYLES --- */
+.modal-header { padding: 20px 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: space-between; align-items: center; }
+.modal-body { padding: 25px 30px; overflow-y: auto; flex: 1; }
+.modal-actions { padding: 20px 30px; background: #020617; display: flex; justify-content: flex-end; gap: 15px; }
+.cancel { background: transparent; color: #94a3b8; border: none; font-weight: 600; cursor: pointer; }
+.pill { font-size: 10px; font-weight: 800; color: #6366f1; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+label { display: block; margin-bottom: 20px; font-size: 11px; font-weight: 800; color: #6366f1; text-transform: uppercase; }

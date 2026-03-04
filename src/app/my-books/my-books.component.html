@@ -1,0 +1,175 @@
+<div class="dashboard-page">
+  <div class="toast-container" *ngIf="toast">
+    <div class="toast-card" [ngClass]="toast.type">
+      <div class="toast-content">
+        <span class="toast-icon">
+          <i *ngIf="toast.type === 'success'">✓</i>
+          <i *ngIf="toast.type === 'info'">ℹ</i>
+          <i *ngIf="toast.type === 'error'">✕</i>
+        </span>
+        <div class="toast-text">
+          <span class="toast-title">{{ toast.type | uppercase }}</span>
+          <p class="toast-msg">{{ toast.message }}</p>
+        </div>
+      </div>
+      <div class="toast-progress"></div>
+    </div>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loader-v2">
+      <div class="orb"></div>
+      <div class="orb"></div>
+      <div class="orb"></div>
+    </div>
+  </div>
+
+  <header class="dashboard-header">
+    <div class="title-group">
+      <h2 class="page-title">Library Nexus</h2>
+      <p class="subtitle">Real-time resource tracking and account settlement</p>
+    </div>
+  </header>
+
+  <div class="summary-grid">
+    <div class="summary-card" style="--i:1">
+      <div class="card-glow"></div>
+      <div class="card-icon">📚</div>
+      <div class="card-data">
+        <h4>Active Loans</h4>
+        <p>{{ activeCount }}</p>
+      </div>
+    </div>
+
+    <div class="summary-card warning" style="--i:2" [class.pulse]="overdueCount > 0">
+      <div class="card-glow"></div>
+      <div class="card-icon">⏳</div>
+      <div class="card-data">
+        <h4>Overdue</h4>
+        <p>{{ overdueCount }}</p>
+      </div>
+    </div>
+
+    <div class="summary-card" style="--i:3">
+      <div class="card-glow"></div>
+      <div class="card-icon">📖</div>
+      <div class="card-data">
+        <h4>All Time</h4>
+        <p>{{ issues.length }}</p>
+      </div>
+    </div>
+
+    <div class="summary-card danger" style="--i:4" [class.glow]="fines?.unpaidFines > 0">
+      <div class="card-glow"></div>
+      <div class="card-icon">💸</div>
+      <div class="card-data">
+        <h4>Fines</h4>
+        <p>{{ (fines?.unpaidFines || 0) | currency }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-container">
+    <button class="tab-btn" [class.active]="activeTab === 'active'" (click)="switchTab('active')">
+      Live Registry
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'history'" (click)="switchTab('history')">
+      Archive
+    </button>
+    <div class="tab-glider" [style.transform]="activeTab === 'history' ? 'translateX(100%)' : 'translateX(0)'"></div>
+  </div>
+
+  <div class="glass-section" *ngIf="activeTab === 'active'">
+    <div class="section-header" *ngIf="activeCount > 0; else emptyActive">
+      <h3>Active Resource Streams</h3>
+      <span class="count-badge">{{ activeCount }} Items</span>
+    </div>
+
+    <div class="table-container" *ngIf="activeCount > 0">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Identity</th>
+            <th>Due Date</th>
+            <th>State</th>
+            <th class="text-right">Operations</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let issue of activeIssues; let idx = index" [style.--row-i]="idx">
+            <td class="book-cell">
+              <span class="book-name">{{ issue.book?.title || ('Asset #' + issue.bookId) }}</span>
+              <span class="book-id">UID: {{ issue.id }}</span>
+            </td>
+            <td>
+              <div class="date-wrapper" [class.date-danger]="isOverdue(issue)">
+                {{ issue.dueDate | date:'dd MMM yyyy' }}
+              </div>
+            </td>
+            <td>
+              <div class="status-container">
+                <span class="status-pill" [class.overdue]="isOverdue(issue)">
+                  {{ isOverdue(issue) ? 'Expired' : 'Secure' }}
+                </span>
+              </div>
+            </td>
+            <td class="text-right">
+              <div class="action-group">
+                <button class="btn-action renew" [disabled]="issue.renewalCount >= issue.maxRenewals" (click)="onRenew(issue.id)">Renew</button>
+                <button class="btn-action pay-btn" (click)="onPayFine(issue.id)">Pay</button>
+                <button class="btn-action return" (click)="onReturn(issue.id)">Return</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyActive>
+      <div class="empty-state">
+        <div class="empty-art">🌑</div>
+        <p>Registry is currently clear.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="glass-section history-view" *ngIf="activeTab === 'history'">
+    <div class="section-header" *ngIf="returnedIssues.length > 0; else emptyHistory">
+      <h3>Historical Records</h3>
+    </div>
+
+    <div class="table-container" *ngIf="returnedIssues.length > 0">
+      <table class="styled-table archive">
+        <thead>
+          <tr>
+            <th>Identity</th>
+            <th>Settled On</th>
+            <th>Audit</th>
+            <th class="text-right">Verification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let issue of returnedIssues; let idx = index" [style.--row-i]="idx">
+            <td><span class="book-name ghost">{{ issue.book?.title }}</span></td>
+            <td><span class="date-wrapper ghost">{{ issue.returnDate | date:'dd MMM yyyy' }}</span></td>
+            <td>
+              <span class="status-pill" [class.success]="issue.finePaid" [class.pending]="!issue.finePaid">
+                {{ issue.finePaid ? 'Cleared' : (issue.fineAmount > 0 ? 'Pending' : 'No Penalty') }}
+              </span>
+            </td>
+            <td class="text-right">
+               <span class="archived-tag">ARCHIVED</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyHistory>
+      <div class="empty-state">
+        <div class="empty-art">📜</div>
+        <p>No historical data present.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

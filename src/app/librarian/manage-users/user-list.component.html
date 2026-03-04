@@ -1,0 +1,78 @@
+<section class="user-page">
+  <header class="header-flex">
+    <h2 class="page-title">Manage Users</h2>
+    <a class="back-link" routerLink="/librarian/dashboard">Back to Dashboard</a>
+  </header>
+
+  <div class="toolbar">
+    <input 
+      type="text" 
+      placeholder="Search by name, username, or email..." 
+      [(ngModel)]="searchTerm" 
+      class="search-input" 
+    />
+  </div>
+
+  <app-loading-spinner *ngIf="isLoading$ | async" />
+  
+  <div class="messages">
+    <p class="info-box" *ngIf="info$ | async as msg">{{ msg }}</p>
+    <p class="error-box" *ngIf="error$ | async as err">{{ err }}</p>
+  </div>
+
+  <section class="user-grid" *ngIf="users$ | async as users">
+    <div class="user-card" *ngFor="let u of filterUsers(users)">
+      
+      <div class="user-info">
+        <div class="avatar">{{ u.fullName.charAt(0) }}</div>
+        <div class="details">
+          <span class="name">{{ u.fullName }}</span>
+          <span class="username">{{ '@' }}{{ u.username }}</span>
+        </div>
+      </div>
+
+      <div class="email-row">
+        <span class="label">Email:</span>
+        <span class="value">{{ u.email }}</span>
+      </div>
+
+      <div class="settings-row">
+        <div class="role-box">
+          <span class="label">Role</span>
+          <select [value]="u.role" (change)='onRoleChange(u, $any($event.target).value)'>
+            <option value="user">User</option>
+            <option value="librarian">Librarian</option>
+          </select>
+        </div>
+
+        <div class="status-box">
+          <span class="badge" [ngClass]="u.isActive ? 'active' : 'inactive'">
+            {{ u.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button *ngIf="u.isActive" class="btn-action deactivate" (click)="askDeactivate(u)">
+          Deactivate
+        </button>
+        <button *ngIf="!u.isActive" class="btn-action activate" (click)="onActivate(u)">
+          Activate
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="filterUsers(users).length === 0" class="empty">
+      <p>No users found matching your search.</p>
+    </div>
+  </section>
+
+  <app-confirm-dialog
+    *ngIf="confirmingDeactivate"
+    [message]="'Deactivate ' + confirmingDeactivate.fullName + '?'"
+    (confirmed)="onDeactivateConfirmed()"
+    (cancelled)="confirmingDeactivate = null"
+  >
+    <p>This user will no longer be able to borrow books.</p>
+  </app-confirm-dialog>
+</section>

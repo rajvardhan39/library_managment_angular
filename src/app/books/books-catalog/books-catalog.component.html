@@ -1,0 +1,122 @@
+<div class="issues-page">
+  <div class="toast-popup" *ngIf="successMessage$ | async as msg">
+    <div class="toast-inner">
+      <div class="toast-icon">✓</div>
+      <div class="toast-content">
+        <span class="badge">Success</span>
+        <span class="msg-text">{{ msg }}</span>
+      </div>
+    </div>
+    <div class="toast-timer"></div>
+  </div>
+
+  <div class="header-flex">
+    <div class="title-group">
+      <h2 class="page-title">Books Catalog</h2>
+      <p class="subtitle">Search, filter, and manage your library collection</p>
+    </div>
+
+    <div class="borrow-hud" *ngIf="currentUser$ | async as user">
+      <div class="hud-content" [class.is-full]="isLimitReached$ | async">
+        <div class="hud-text">
+          <span class="hud-label">Borrowing Power</span>
+          <div class="hud-values">
+            <span class="current">{{ user.currentBooksCount }}</span>
+            <span class="divider">/</span>
+            <span class="total">{{ user.maxBooksAllowed }}</span>
+          </div>
+        </div>
+        <div class="hud-progress-track">
+          <div class="hud-progress-fill" 
+               [style.width.%]="(user.currentBooksCount / user.maxBooksAllowed) * 100">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        class="search" 
+        [formControl]="searchControl" 
+        placeholder="Search title, ISBN or author..."
+      />
+    </div>
+    
+    <div class="filters">
+      <button 
+        class="filter-btn"
+        (click)="categoryControl.setValue('')" 
+        [class.active]="categoryControl.value === ''">
+        All Items
+      </button>
+      <button 
+        class="filter-btn"
+        *ngFor="let cat of (categories$ | async)" 
+        (click)="categoryControl.setValue(cat === categoryControl.value ? '' : cat)"
+        [class.active]="categoryControl.value === cat">
+        {{ cat }}
+      </button>
+    </div>
+  </div>
+
+  <div class="issues-grid" *ngIf="books$ | async as books; else emptyState">
+    <div 
+      class="issue-card" 
+      *ngFor="let b of books; let i = index" 
+      [style.--i]="i">
+      
+      <div class="card-header">
+        <span class="badge">{{ b.category }}</span>
+        <span class="isbn">ID: {{ b.isbn || 'N/A' }}</span>
+      </div>
+
+      <div class="book-info">
+        <div class="book-title">{{ b.title }}</div>
+        <div class="username">Published: {{ b.publishedYear }} • {{ b.author }}</div>
+      </div>
+
+      <div class="due">
+        <div class="due-item">
+          <span class="date">Status</span>
+          <span class="name">{{ b.availableCopies > 0 ? 'In Stock' : 'Out of Stock' }}</span>
+        </div>
+        <div class="due-item">
+          <span class="date">Available</span>
+          <span class="name">{{ b.availableCopies }} Copies</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button 
+          class="return-btn"
+          (click)="onBorrow($event, b)"
+          [disabled]="b.isBorrowed || b.availableCopies === 0 || (borrowingBookId$ | async) === b.id || (isLimitReached$ | async)">
+          
+          <ng-container *ngIf="(borrowingBookId$ | async) !== b.id; else loading">
+            <span *ngIf="b.isBorrowed">Already Borrowed</span>
+            <span *ngIf="!b.isBorrowed && b.availableCopies === 0">Unavailable</span>
+            <span *ngIf="!b.isBorrowed && b.availableCopies > 0 && (isLimitReached$ | async)">Limit Reached</span>
+            <span *ngIf="!b.isBorrowed && b.availableCopies > 0 && !(isLimitReached$ | async)">Borrow Book</span>
+          </ng-container>
+          
+          <ng-template #loading>
+            <span class="processing">Processing...</span>
+          </ng-template>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-container">
+      <div class="empty-icon">📂</div>
+      <p class="empty-text">No books found matching your current filters.</p>
+    </div>
+  </ng-template>
+
+  <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
+</div>
